@@ -49,11 +49,18 @@ jobs:
         $env:PATH = "$mingwBin;$env:PATH"
         $env:CC = "$mingwBin\gcc.exe"
         $env:CXX = "$mingwBin\g++.exe"
+        & $env:CC --version
         go build -v ./cmd/lmdbnav
 
-    - name: Verify build
+    - name: Verify build (Linux/macOS)
+      if: matrix.os != 'windows-latest'
       run: |
-        ls -la lmdbnav* || dir lmdbnav*
+        ls -la lmdbnav*
+
+    - name: Verify build (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        Get-ChildItem -Force lmdbnav*
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
