@@ -1,0 +1,58 @@
+name: Build lmdbnav
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        go-version: [1.17.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Install dependencies
+      run: go mod download
+
+    - name: Build on Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential
+        CGO_ENABLED=1 go build -v ./cmd/lmdbnav
+
+    - name: Build on macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        xcode-select --install || true
+        CGO_ENABLED=1 go build -v ./cmd/lmdbnav
+
+    - name: Build on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install -y mingw
+        $env:CGO_ENABLED = "1"
+        $env:PATH += ";C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
+        go build -v ./cmd/lmdbnav
+
+    - name: Verify build
+      run: |
+        ls -la lmdbnav* || dir lmdbnav*
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: lmdbnav-${{ matrix.os }}
+        path: lmdbnav*
