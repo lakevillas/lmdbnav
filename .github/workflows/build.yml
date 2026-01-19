@@ -25,7 +25,7 @@ jobs:
         go-version: ${{ matrix.go-version }}
 
     - name: Install dependencies
-      run: go mod download
+      run: go mod tidy
 
     - name: Build on Linux
       if: matrix.os == 'ubuntu-latest'
