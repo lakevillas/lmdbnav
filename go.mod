@@ -5,7 +5,7 @@ go 1.17
 require github.com/rivo/tview v0.0.0-20220129131435-1f7581b67bd1
 
 require (
-	github.com/PowerDNS/lmdb-go v1.9.0 // indirect
+	github.com/PowerDNS/lmdb-go v1.9.3 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell/v2 v2.4.1-0.20210905002822-f057f0a857a1 // indirect
