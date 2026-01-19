@@ -43,7 +43,8 @@ jobs:
     - name: Build on Windows
       if: matrix.os == 'windows-latest'
       run: |
-        choco install -y mingw
+        # Use older MinGW version compatible with Go 1.17
+        choco install -y mingw --version=8.1.0
         $env:CGO_ENABLED = "1"
         $env:PATH += ";C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin"
         go build -v ./cmd/lmdbnav
